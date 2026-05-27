@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: safetrack-app
+  namespace: safetrack
+spec:
+  selector:
+    app: safetrack-app
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: safetrack-db
+  namespace: safetrack
+spec:
+  selector:
+    app: safetrack-db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP

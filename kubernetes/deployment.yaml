@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safetrack-app
+  namespace: safetrack
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: safetrack-app
+  template:
+    metadata:
+      labels:
+        app: safetrack-app
+    spec:
+      containers:
+      - name: safetrack-app
+        image: safetrack-wa-app:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: DB_HOST
+          value: safetrack-db
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_NAME
+          value: safetrack
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASSWORD
+          value: safetrack123
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: safetrack-db
+  namespace: safetrack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: safetrack-db
+  template:
+    metadata:
+      labels:
+        app: safetrack-db
+    spec:
+      containers:
+      - name: safetrack-db
+        image: postgres:15
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: safetrack
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: safetrack123

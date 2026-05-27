@@ -1,5 +1,5 @@
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from app.models import Base
 from dotenv import load_dotenv
 import os
@@ -14,6 +14,16 @@ DB_URL = (
 engine = create_engine(DB_URL)
 
 def load_all():
+    print('Dropping existing tables...')
+    with engine.connect() as conn:
+        conn.execute(text("DROP TABLE IF EXISTS compliance_actions CASCADE"))
+        conn.execute(text("DROP TABLE IF EXISTS near_miss CASCADE"))
+        conn.execute(text("DROP TABLE IF EXISTS incidents CASCADE"))
+        conn.execute(text("DROP TABLE IF EXISTS inspections CASCADE"))
+        conn.execute(text("DROP TABLE IF EXISTS workers CASCADE"))
+        conn.execute(text("DROP TABLE IF EXISTS sites CASCADE"))
+        conn.commit()
+
     print('Creating tables...')
     Base.metadata.create_all(engine)
 
@@ -28,7 +38,8 @@ def load_all():
 
     for table, path in tables.items():
         df = pd.read_csv(path)
-        df.to_sql(table, engine, if_exists='replace', index=False)
+        df.columns = [c.lower() for c in df.columns]
+        df.to_sql(table, engine, if_exists='append', index=False)
         print(f'  Loaded {len(df):,} rows into {table}')
 
     print('Done.')
