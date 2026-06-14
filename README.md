@@ -243,7 +243,6 @@ Extract and place `CurrentTenements.csv` in `data/raw/`.
 ## Author
 
 **Areesha Majid**
-Master of Data Science, RMIT University
 
 - GitHub: [github.com/areeshamajid](https://github.com/areeshamajid)
 - LinkedIn: [linkedin.com/in/YOUR_LINKEDIN](https://linkedin.com/in/YOUR_LINKEDIN)
